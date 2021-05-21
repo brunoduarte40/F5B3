@@ -4,29 +4,39 @@ import matplotlib as mpl, matplotlib.pyplot as plt
 import seaborn as sns
 
 from pandas_datareader import data, wb
-from datetime import datetime, timedelta
 
+import pandas_datareader.data as pdr
+from pandas_datareader import data as wb
+import datetime
+import pandas as pd
+
+from datetime import datetime, timedelta
 data_atual_semFormato = datetime.now()
 data_atual = data_atual_semFormato.strftime("%d/%m/%Y")
 data_atual_ano_mes_dia = data_atual_semFormato.strftime("%Y-%m-%d")
 data_atual
-import pandas_datareader.data as pdr
-from pandas_datareader import data as wb
+
 
 import re
 import datetime
 import pandas as pd
+end_date = datetime.datetime.now()
 
-
-# from Codigos.Data_Util import *
-class Valor_atualizado_acoes:
+class Historico_valor_atualizado:
 
     def __init__(self):
         self
 
 
 if __name__ == '__main__':
-    valor_atualizado_acoes = Valor_atualizado_acoes()
+    historico_valor_atualizado = Historico_valor_atualizado()
+
+dadosQTDAcoes = pd.read_csv(r'..\dados\BDACAOSA.csv', sep=';')
+acao_dataEntrada = pd.DataFrame(dadosQTDAcoes, columns=['Ação', 'Data Entrada', 'Investimento Total', 'Valor Entrada'])
+acao_dataEntrada = acao_dataEntrada.sort_values(by='Data Entrada', ascending=True)
+
+
+
 try:
     import httplib  # Python 2.7
 except ImportError:
@@ -35,8 +45,6 @@ end_date = datetime.datetime.now()
 dadosQTDAcoes = pd.read_csv(r'..\dados\BDACAOSA.csv', sep=';')
 acao_dataEntrada = pd.DataFrame(dadosQTDAcoes, columns=['Ação', 'Data Entrada', 'Investimento Total', 'Valor Entrada'])
 acao_dataEntrada = acao_dataEntrada.sort_values(by='Data Entrada', ascending=True)
-
-
 ##################
 def obter_feriados(cidade, uf, ano=None):
     '''Obter lista de feriados por cidade e uf
@@ -79,9 +87,11 @@ def obter_feriados(cidade, uf, ano=None):
     # Alterar o tipo de `datetime´ para `date´
     feriados = map(lambda f: datetime.date(f.year, f.month, f.day), feriados)
 
+
     # Retornar os feriados ordenados
 
     return sorted(feriados)
+
 
 
 def converter_para_data(data):
@@ -123,8 +133,6 @@ def proximo_dia_util(data, feriados=[], sabado_util=False,
     return data
 
 
-###################
-
 if __name__ == '__main__':
     datas_teste = [data_atual]
 
@@ -132,21 +140,6 @@ if __name__ == '__main__':
     feriados = obter_feriados('sao-paulo', 'sao-paulo')
     for feriado in feriados:
         print(feriado.strftime("%d/%m/%Y"))
-
-    for data in datas_teste:
-        util = "é" if dia_util(data, feriados) else "não é"
-        print("{} {} dia útil nesta cidade!".format(data, util))
-
-        anterior = proximo_dia_util(data, feriados, sabado_util=False,
-                                    anterior=True)
-        print("\--> O dia útil anteior é {}".format(anterior.strftime("%d/%m/%Y")))
-        print(anterior)
-##################
-if __name__ == '__main__':
-    datas_teste = [data_atual]
-
-    print("\n\n*** São Paulo ***")
-    feriados = obter_feriados('sao-paulo', 'sao-paulo')
 
     for data in datas_teste:
         util = "é" if dia_util(data, feriados) else "não é"
@@ -164,26 +157,35 @@ hora_em_texto = hora_atuais.strftime("%H:%M")
 hora_abertura_pregao_em_texto = ("10:30")
 hora = datetime.strptime(hora_em_texto, "%H:%M")
 hora_abertura_pregao = datetime.strptime(hora_abertura_pregao_em_texto, "%H:%M")
-if (hora_abertura_pregao >= hora):
+if(hora_abertura_pregao >= hora):
     print("antes de 10:30")
     data_pesquisa = anterior.strftime("%Y-%m-%d")
-    print("antes das 10:30 o dia util é", data_pesquisa)
+    print("antes das 10:30 o dia util é",data_pesquisa)
 else:
     print("Depois das 10:30")
 
+
+
+Montante_Atualizado = pd.read_csv(r'..\output\Montante_atualizado\Montante_Atualizado.csv', sep = ';')
+acoes = Montante_Atualizado
+contador = 0
 tickers = acao_dataEntrada['Ação']
 tickers
 prices = pd.DataFrame()
+dataEntrada = acoes.loc[[contador]]['Data Entrada']
 for t in tickers:
     try:
-        prices[t] = wb.DataReader(t, data_source='yahoo', start=anterior)['Adj Close']
+        prices[t] = wb.DataReader(t, data_source='yahoo', start=dataEntrada.all(), end=data_atual)['Adj Close']
+
     except KeyError:
         pass
     # prices[t]=wb.DataReader(t, data_source='yahoo', start=anterior)['Adj Close']
 
-Valor_Acao_Horizontal = prices
-Valor_Acao_Vertical = Valor_Acao_Horizontal.T
-Valor_Atualizado = round(Valor_Acao_Vertical, 2)
+Historico_Valor_Acao_Horizontal = prices
+Historico_Valor_Acao_Horizontal = round(Historico_Valor_Acao_Horizontal, 2)
 
-Valor_Atualizado.to_csv(r'..\output\Valor_Atualizado_Acoes\Valor_Atualizado.csv', sep=';')
-# Valor_Atualizado.to_csv(r'..\Codigos\Valor_atualizado_Acoes\Valor_Atualizado.csv', sep=';')
+Historico_Valor_Acao_Vertical = Historico_Valor_Acao_Horizontal.T
+Historico_Valor_Atualizado = round(Historico_Valor_Acao_Vertical, 2)
+
+
+Historico_Valor_Acao_Horizontal.to_csv(r'..\output\Valor_atualizado_Acoes\Historico_Valor_Atualizado.csv', sep=';')

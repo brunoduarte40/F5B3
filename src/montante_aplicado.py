@@ -12,14 +12,14 @@ class Montante_aplicado:
 
 if __name__ == '__main__':
     montante_aplicado = Montante_aplicado()
-    dadosQTDAcoes = pd.read_csv(r"J:\Compartilhada\Compartilhada\F5BOVA\Dados\BDACAOSA.csv", sep=';')
-    isExist = os.path.exists("J:\\Compartilhada\\Compartilhada\\F5BOVA\\Codigos\\Historico_unitario_acao")
+    dadosQTDAcoes = pd.read_csv(r"..\dados\BDACAOSA.csv", sep=';')
+    isExist = os.path.exists("..\\output\\Historico_unitario_acao")
 
     if isExist == True:
-        shutil.rmtree("J:\\Compartilhada\\Compartilhada\\F5BOVA\\Codigos\\Historico_unitario_acao");
-        os.mkdir(r"J:\Compartilhada\Compartilhada\F5BOVA\Codigos\Historico_unitario_acao");
+        shutil.rmtree("..\\output\\Historico_unitario_acao");
+        os.mkdir(r"..\output\Historico_unitario_acao");
     else:
-        os.mkdir("J:\\Compartilhada\\Compartilhada\\F5BOVA\\Codigos\\Historico_unitario_acao")
+        os.mkdir("..\\output\\Historico_unitario_acao")
     ##########################################################################################################
     nomeAcoesEDataEntradaInvestimentoTotal = \
         pd.DataFrame(dadosQTDAcoes,
@@ -46,7 +46,7 @@ if __name__ == '__main__':
     Grafico = AcaoNaCarteira.plot(x='Ação', y='Investimento Total', kind='pie', labels=AcaoNaCarteira['Ação'],
                                   fontsize=5)
     Grafico.legend().set_visible(False)
-    plt.savefig(r'J:\Compartilhada\Compartilhada\F5BOVA\Codigos\Grafico.png', format='png')
+    plt.savefig(r'..\output\Grafico.png', format='png')
 
     # botar em ordem cronologica
     acao_vendidaOrdemCronologica = AcaoNaCarteira.sort_values(by='Data Entrada', ascending=True)
@@ -57,4 +57,4 @@ if __name__ == '__main__':
     figMedia.set_ylabel('R$ Aplicado', {'fontsize': 6})
     figMedia.set_title('Valores Aplicados na carteira', {'fontsize': 8})
 
-    plt.savefig(r'J:\Compartilhada\Compartilhada\F5BOVA\Codigos\figMedia.png', format='png')
+    plt.savefig(r'..\output\figMedia.png', format='png')
