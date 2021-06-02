@@ -1,4 +1,4 @@
 # F5B3
 Código desenvolvido em python com o intuito de atualizar a cotação de ações da Bovespa
 
-![plot](../main/output/Historico_unitario_acao/*.png)
+![plot](../main/output/Historico_unitario_acao/%.png)
